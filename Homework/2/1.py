@@ -60,6 +60,8 @@ def bfs(x, y, g):
 
     visited = [[False for i in range(len(g[0]))] for j in range(len(g))]
     path = []
+    dist = [[float('inf') for i in range(len(g[0]))] for j in range(len(g))]
+    dist[y][x] = 0
 
     while queue:
         x, y = queue.pop(0)
@@ -68,6 +70,7 @@ def bfs(x, y, g):
             continue
 
         if is_s(x, y, g):
+            fx, fy = x, y
             break
 
         path.append((x, y))
@@ -78,22 +81,45 @@ def bfs(x, y, g):
             new_x, new_y = f(x, y)
 
             if is_correct(new_x, new_y, g) and not is_visited(new_x, new_y, visited) and not is_wall(new_x, new_y, g):
+                if dist[new_y][new_x] > dist[y][x] + 1:
+                    dist[new_y][new_x] = dist[y][x] + 1
                 queue.append((new_x, new_y))
+
+    path = [(fx, fy)]
+
+    while True:
+        x, y = path[-1]
+
+        if is_e(x, y, g):
+            path.append((x, y))
+            break
+
+        s = dist[y][x]
+
+        for f in MOVE_FUNCTIONS:
+            new_x, new_y = f(x, y)
+            if is_correct(new_x, new_y, g) and not is_wall(new_x, new_y, g):
+                if s == dist[new_y][new_x] + 1:
+                    path.append((new_x, new_y))
+                    break
 
     return path
 
 
 def draw_path(path, g):
     g = g.copy()
+
+    r = [i.copy() for i in g]
+
     for cell in path:
         x, y = cell
-        if g[y][x] not in 'es':
-            g[y][x] = '*'
+        if r[y][x] not in 'es':
+            r[y][x] = '*'
 
-    for i in range(len(g)):
-        g[i] = ''.join(g[i])
+    for i in range(len(r)):
+        r[i] = ''.join(r[i])
 
-    return '\n'.join(g)
+    return '\n'.join(r)
 
 
 if __name__ == '__main__':
