@@ -43,7 +43,7 @@ def heap_sort(a):
 
 
 if __name__ == '__main__':
-    n = 1000000
+    n = 10000
 
     # O(n) case
     lst = [1 for i in range(n)]
@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
     heap_sort(lst)
 
-    print(count)
+    print("O(n):", count)
 
     # O(n * log n) case
     lst = [i for i in range(n)]
@@ -61,4 +61,4 @@ if __name__ == '__main__':
 
     heap_sort(lst)
 
-    print(count)
+    print("O(n * log n):", count)
