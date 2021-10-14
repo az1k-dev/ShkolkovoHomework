@@ -28,10 +28,15 @@ def heap_sort(a):
 
     heapify(a, start=True)
 
+    print(a)
+
     for i in range(n):
         j = n - i
+        print("a)", a)
         heapify(a, finish=j)
+        print("b)", a)
         a[0], a[j - 1] = a[j - 1], a[0]
+        print("c)", a)
 
     return
 
