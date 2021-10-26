@@ -75,8 +75,8 @@ def heapify(a, i=0, finish=None, start=False):
         return
 
     if start:
-        heapify(a, i1, finish)
-        heapify(a, i2, finish)
+        heapify(a, i1, finish, start)
+        heapify(a, i2, finish, start)
 
     if a[i1] > a[i] or a[i2] > a[i]:
         if a[i1] > a[i2]:
