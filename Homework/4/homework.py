@@ -151,6 +151,14 @@ class LongInt:
         else:
             self.sign = self.MINUS
 
+    def __pow__(self, power, modulo=None):
+        i = LongInt(power)
+        s = LongInt('1')
+        while i > LongInt('0'):
+            s *= self
+            i -= LongInt('1')
+        return s
+
     def __add__(self, other):
         if self.sign == other.sign:
             new_number = self.add_positive(self, other)
@@ -272,7 +280,11 @@ tests = [
     LongInt('0') * LongInt('10') == LongInt('0'),
     LongInt('453') * LongInt('564') == LongInt('255492'),
     LongInt('456546') * LongInt('-784654') == LongInt('-358230645084'),
-    LongInt('6').factorial() == LongInt('720')
+    LongInt('6').factorial() == LongInt('720'),
+    LongInt('5') ** LongInt('2') == LongInt('25'),
+    LongInt('7') ** LongInt('3') == LongInt('343'),
+    LongInt('9') ** LongInt('1') == LongInt('9'),
+    LongInt('3') ** LongInt('0') == LongInt('1')
 ]
 
 print(f"Pass: {tests.count(True)} Fail: {tests.count(False)}")
