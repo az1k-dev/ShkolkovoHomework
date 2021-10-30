@@ -109,6 +109,14 @@ class LongInt:
 
         return LongInt(answer)
 
+    def factorial(self):
+        s = LongInt('1')
+        i = LongInt('1')
+        while i <= self:
+            s *= i
+            i += LongInt('1')
+        return s
+
     def __sub__(self, other):
         s = LongInt(other)
         s.switch_sign()
@@ -264,6 +272,7 @@ tests = [
     LongInt('0') * LongInt('10') == LongInt('0'),
     LongInt('453') * LongInt('564') == LongInt('255492'),
     LongInt('456546') * LongInt('-784654') == LongInt('-358230645084'),
+    LongInt('6').factorial() == LongInt('720')
 ]
 
 print(f"Pass: {tests.count(True)} Fail: {tests.count(False)}")
