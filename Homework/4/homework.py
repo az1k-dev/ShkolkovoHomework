@@ -19,6 +19,8 @@ class LongInt:
             self.sign = number.sign
 
     def check_lst(self):
+        if self.n == 1:
+            return
         k = 0
         for i in range(1, self.n + 1):
             if self.lst[-i] == 0:
@@ -40,12 +42,13 @@ class LongInt:
     def add_positive(a, b):
         a = LongInt(a)
         b = LongInt(b)
+
         if a.n != b.n:
             if a.n > b.n:
-                b.lst += [0 * (a.n - b.n)]
+                b.lst += [0] * (a.n - b.n)
                 b.n = a.n
             else:
-                a.lst += [0 * (b.n - a.n)]
+                a.lst += [0] * (b.n - a.n)
                 a.n = b.n
 
         lst = []
@@ -59,6 +62,10 @@ class LongInt:
             lst.append(temp)
 
         return LongInt(lst)
+
+    def add_null(self, n=1):
+        self.n += n
+        self.lst = [0] * n + self.lst
 
     @staticmethod
     def subtract_positive(a, b):
@@ -87,6 +94,45 @@ class LongInt:
                 new_number = LongInt.subtract_positive(b, a)
                 new_number.switch_sign()
                 return new_number
+
+    @staticmethod
+    def multiply_long_to_digit(long, digit):
+        answer = []
+        temp = 0
+        for i in range(long.n):
+            s = long.lst[i] * digit + temp
+            temp = s // 10
+            answer.append(s % 10)
+
+        if temp != 0:
+            answer.append(temp)
+
+        return LongInt(answer)
+
+    def __sub__(self, other):
+        s = LongInt(other)
+        s.switch_sign()
+        return self + s
+
+    def __mul__(self, other):
+        a = LongInt(self.lst)
+        b = LongInt(other.lst)
+        if self.sign == other.sign:
+            new_sign = self.PLUS
+        else:
+            new_sign = self.MINUS
+
+        answer = LongInt('0')
+
+        for i in range(len(b.lst)):
+            s = self.multiply_long_to_digit(a, b.lst[i])
+            if s != LongInt('0'):
+                s.add_null(i)
+            answer = answer + s
+
+        answer.set_sign(new_sign)
+
+        return answer
 
     def set_sign(self, sign):
         self.sign = sign
@@ -197,6 +243,7 @@ tests = [
     not bool(LongInt('-100') >= LongInt('99')),
     not bool(LongInt('-102') >= LongInt('-100')),
     not bool(LongInt('-100') >= LongInt('-99')),
+    LongInt('0') + LongInt('100') == LongInt('100'),
     LongInt('100') + LongInt('100') == LongInt('200'),
     LongInt('-100') + LongInt('100') == LongInt('0'),
     LongInt('-100') + LongInt('-100') == LongInt('-200'),
@@ -205,7 +252,18 @@ tests = [
     LongInt('-99') + LongInt('100') == LongInt('1'),
     LongInt('99') + LongInt('-100') == LongInt('-1'),
     LongInt('101') + LongInt('-100') == LongInt('1'),
-
+    LongInt('101') - LongInt('-100') == LongInt('201'),
+    LongInt('101') - LongInt('100') == LongInt('1'),
+    LongInt('-101') - LongInt('-100') == LongInt('-1'),
+    LongInt.multiply_long_to_digit(LongInt('455'), 1) == LongInt('455'),
+    LongInt('10') * LongInt('20') == LongInt('200'),
+    LongInt('-10') * LongInt('-20') == LongInt('200'),
+    LongInt('10') * LongInt('-20') == LongInt('-200'),
+    LongInt('-10') * LongInt('20') == LongInt('-200'),
+    LongInt('0') + LongInt('10') == LongInt('10'),
+    LongInt('0') * LongInt('10') == LongInt('0'),
+    LongInt('453') * LongInt('564') == LongInt('255492'),
+    LongInt('456546') * LongInt('-784654') == LongInt('-358230645084'),
 ]
 
 print(f"Pass: {tests.count(True)} Fail: {tests.count(False)}")
