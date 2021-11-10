@@ -1,0 +1,1 @@
+print('' * int(input()) + ' '.join(list(map(lambda s: str(s[0] + 1), sorted(list(enumerate([int(i) for i in input().split()])), key=lambda s: s[1], reverse=True)))))
